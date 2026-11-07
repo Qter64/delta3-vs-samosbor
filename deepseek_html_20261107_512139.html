@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сравнение: EcoFlow Delta 3 vs Самосбор</title>
+<style>
+  :root {
+    --md-primary: #6750A4;
+    --md-primary-container: #EADDFF;
+    --md-on-primary-container: #21005D;
+    --md-secondary-container: #E8DEF8;
+    --md-on-secondary-container: #1D192B;
+    --md-surface: #FEF7FF;
+    --md-surface-container: #F3EDF7;
+    --md-surface-container-high: #ECE6F0;
+    --md-on-surface: #1D1B20;
+    --md-on-surface-variant: #49454F;
+    --md-outline-variant: #CAC4D0;
+    --md-error-container: #F9DEDC;
+    --md-on-error-container: #410E0B;
+    --md-success: #1A7F37;
+    --md-success-container: #D7F5DD;
+    --md-radius-lg: 28px;
+    --md-radius-md: 16px;
+    --md-elevation-1: 0 1px 2px rgba(0,0,0,.12), 0 1px 3px 1px rgba(0,0,0,.08);
+    --md-elevation-2: 0 1px 2px rgba(0,0,0,.12), 0 2px 6px 2px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at 20% 0%, #F3EDF7 0%, #FEF7FF 45%, #FEF7FF 100%);
+    color: var(--md-on-surface);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ИНТРО */
+  #intro-screen {
+    position: fixed; inset: 0; background: #FEF7FF; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #intro-screen.hidden { opacity: 0; visibility: hidden; }
+  .vs-container { display: flex; align-items: center; gap: 30px; perspective: 1000px; }
+  .intro-card {
+    width: 200px; height: 250px; background: var(--md-surface-container);
+    border-radius: var(--md-radius-lg); box-shadow: var(--md-elevation-2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transform: translateY(50px) rotateY(-30deg);
+    animation: slideInCard 0.8s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  .intro-card.card-left { animation-delay: 0.3s; }
+  .intro-card.card-right { transform: translateY(50px) rotateY(30deg); animation-delay: 0.5s; }
+  .intro-card img { width: 80%; height: 120px; object-fit: contain; margin-bottom: 15px; }
+  .intro-card span { font-weight: 700; font-size: 18px; }
+  .vs-badge {
+    font-size: 48px; font-weight: 900; color: var(--md-primary);
+    background: var(--md-primary-container); width: 80px; height: 80px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: scale(0);
+    animation: popVS 0.6s cubic-bezier(.175, .885, .32, 1.275) 1.2s forwards;
+    box-shadow: var(--md-elevation-2);
+  }
+  @keyframes slideInCard { to { opacity: 1; transform: translateY(0) rotateY(0); } }
+  @keyframes popVS { to { opacity: 1; transform: scale(1); } }
+  .progress-bar { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--md-primary); width: 0%; animation: loadProgress 2.8s ease-in-out forwards; }
+  @keyframes loadProgress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
+
+  /* ОСНОВНОЙ КОНТЕНТ */
+  #main-content { opacity: 0; visibility: hidden; transition: opacity 1s ease 0.2s, visibility 1s ease 0.2s; padding: 32px 16px 64px; }
+  #main-content.show { opacity: 1; visibility: visible; }
+  .blob { position: fixed; border-radius: 50%; filter: blur(80px); opacity: .35; z-index: -1; animation: float 18s ease-in-out infinite; }
+  .blob.b1 { width: 420px; height: 420px; background: #EADDFF; top: -120px; left: -100px; }
+  .blob.b2 { width: 360px; height: 360px; background: #D7F5DD; bottom: -120px; right: -80px; animation-delay: -6s; }
+  .blob.b3 { width: 300px; height: 300px; background: #FFD8E4; top: 40%; left: 60%; animation-delay: -12s; }
+  @keyframes float { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.06); } 66% { transform: translate(-20px,25px) scale(0.96); } }
+  .page { max-width: 1100px; margin: 0 auto; position: relative; }
+  .headline { font-size: 36px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.8px; background: linear-gradient(90deg, #6750A4, #8E6FD8, #1A7F37); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .subhead { font-size: 16px; color: var(--md-on-surface-variant); margin: 0 0 32px; }
+
+  /* КАРТОЧКИ */
+  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; perspective: 1200px; }
+  .hero-card { background: var(--md-surface-container); border-radius: var(--md-radius-lg); padding: 28px 24px; box-shadow: var(--md-elevation-1); display: flex; flex-direction: column; }
+  .hero-img-container { width: 100%; height: 260px; margin-bottom: 20px; border-radius: var(--md-radius-md); overflow: hidden; position: relative; background: #EADDFF; display: flex; align-items: center; justify-content: center; }
+  .hero-img-container::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%); transform: translateX(-100%); animation: shimmer 3.5s ease-in-out infinite; pointer-events: none; z-index: 2; }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 60%,100% { transform: translateX(100%); } }
+  .hero-img-single, .hero-img-gallery { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .hero-img-single img { width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform .4s ease; }
+  .hero-card:hover .hero-img-single img { transform: scale(1.05); }
+  .hero-img-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
+  .hero-img-gallery .gallery-item { height: 100%; background: rgba(255,255,255,0.4); border-radius: var(--md-radius-md); display: flex; align-items: center; justify-content: center; padding: 5px; }
+  .hero-img-gallery img { width: 100%; height: 100%; object-fit: contain; }
+  .hero-title { font-size: 24px; font-weight: 700; margin: 0 0 6px; }
+  .hero-subtitle { font-size: 15px; color: var(--md-primary); font-weight: 600; margin: 0 0 16px; }
+  .hero-desc { font-size: 14.5px; color: var(--md-on-surface-variant); line-height: 1.6; margin: 0 0 16px; }
+  .hero-desc strong { color: var(--md-on-surface); }
+  .details-block { margin-bottom: 16px; }
+  .details-block h4 { margin: 0 0 8px; font-size: 15px; }
+  .hero-list { list-style: none; padding: 0; margin: 0; }
+  .hero-list li { display: flex; gap: 8px; font-size: 14px; margin-bottom: 8px; align-items: flex-start; }
+  .hero-list li svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+  .good-icon { color: var(--md-success); }
+  .bad-icon { color: var(--md-error); }
+  .hero-price { margin-top: auto; background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-radius: var(--md-radius-md); padding: 14px 18px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .hero-price strong { font-size: 20px; }
+
+  /* ТАБЛИЦА */
+  .card { background: var(--md-surface-container); border-radius: var(--md-radius-lg); padding: 8px; box-shadow: var(--md-elevation-1); overflow-x: auto; margin-bottom: 32px; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 800px; font-size: 14.5px; }
+  thead th { background: var(--md-primary-container); color: var(--md-on-primary-container); font-weight: 600; text-align: left; padding: 16px 18px; position: sticky; top: 0; white-space: nowrap; z-index: 2; }
+  thead th:first-child { border-top-left-radius: var(--md-radius-md); }
+  thead th:last-child { border-top-right-radius: var(--md-radius-md); }
+  tbody td { padding: 14px 18px; border-bottom: 1px solid var(--md-outline-variant); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:last-child td:first-child { border-bottom-left-radius: var(--md-radius-md); }
+  tbody tr:last-child td:last-child { border-bottom-right-radius: var(--md-radius-md); }
+  tbody td:first-child { font-weight: 600; color: var(--md-on-surface-variant); white-space: nowrap; }
+  
+  /* Стили для групп в таблице */
+  .table-group td { background: var(--md-surface-container-high) !important; font-weight: 700; color: var(--md-primary); padding: 10px 18px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  
+  tr.highlight td { background: var(--md-secondary-container) !important; color: var(--md-on-secondary-container); font-weight: 600; }
+  tr.highlight:hover td { background: #D0BCFF !important; }
+
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+  .chip svg { width: 16px; height: 16px; }
+  .chip.good { background: var(--md-success-container); color: var(--md-success); }
+  .chip.bad { background: var(--md-error-container); color: var(--md-on-error-container); }
+  .chip.neutral { background: var(--md-surface-container-high); color: var(--md-on-surface-variant); }
+
+  /* ВЫВОД */
+  .verdict { background: linear-gradient(135deg, #6750A4, #8E6FD8); color: white; border-radius: var(--md-radius-lg); padding: 32px; box-shadow: var(--md-elevation-2); margin-bottom: 32px; }
+  .verdict h2 { margin: 0 0 16px; font-size: 26px; }
+  .verdict p { margin: 0 0 16px; font-size: 15.5px; line-height: 1.6; opacity: 0.95; }
+  .verdict strong { background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; }
+  .verdict-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .verdict-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
+  .verdict-list svg { width: 20px; height: 20px; flex-shrink: 0; fill: #D7F5DD; }
+
+  .note { font-size: 13px; color: var(--md-on-surface-variant); background: var(--md-surface-container); border-radius: var(--md-radius-md); padding: 16px 20px; display: flex; gap: 12px; }
+  .note svg { width: 20px; height: 20px; color: var(--md-primary); flex-shrink: 0; }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .vs-container { flex-direction: column; gap: 10px; }
+    .intro-card { width: 160px; height: 200px; }
+    .vs-badge { margin: -10px 0; }
+    .verdict { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ИНТРО -->
+<div id="intro-screen">
+  <div class="vs-container">
+    <div class="intro-card card-left">
+      <img src="https://goodmi.ru/images/ab__webp/thumbnails/1220/1373/detailed/155/2_lp3z-y9_jpg.webp" alt="EcoFlow">
+      <span>EcoFlow</span>
+    </div>
+    <div class="vs-badge">VS</div>
+    <div class="intro-card card-right">
+      <img src="https://sip-basket-cdn-02.geobasket.ru/vol17067/part1706732/1706732430/images/big/2.webp?picsUpdate=0" alt="Самосбор">
+      <span>Самосбор</span>
+    </div>
+  </div>
+  <div class="progress-bar"></div>
+</div>
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<div id="main-content">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <div class="page">
+
+    <h1 class="headline">Сравнение: EcoFlow Delta 3 vs Самосбор</h1>
+    <p class="subhead">Подробный разбор с учётом субсидии Севастополя (до 50%)</p>
+
+    <div class="hero-grid">
+      <!-- ECOFLOW -->
+      <div class="hero-card">
+        <div class="hero-img-container">
+          <div class="hero-img-single">
+            <img src="https://goodmi.ru/images/ab__webp/thumbnails/1220/1373/detailed/155/2_lp3z-y9_jpg.webp" alt="EcoFlow Delta 3">
+          </div>
+        </div>
+        <h2 class="hero-title">EcoFlow Delta 3</h2>
+        <p class="hero-subtitle">Моноблочная электростанция</p>
+        <p class="hero-desc">Это <strong>готовое устройство «всё в одном»</strong>. Внутри корпуса уже собраны: LiFePO4 батарея на 1024 Вт·ч, инвертор на 1800 Вт (пик 3600 Вт), контроллер заряда, защита BMS и порты (4 розетки 220В, 2x USB-C 100W, 2x USB-A).</p>
+        <div class="details-block">
+          <h4>Плюсы:</h4>
+          <ul class="hero-list">
+            <li><svg class="good-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Мощный выход 1800 Вт</li>
+            <li><svg class="good-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> <strong>Попадает под субсидию</strong></li>
+          </ul>
+        </div>
+        <div class="details-block">
+          <h4>Минусы:</h4>
+          <ul class="hero-list">
+            <li><svg class="bad-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Малая ёмкость (1 кВт·ч)</li>
+          </ul>
+        </div>
+        <div class="hero-price"><span>С субсидией:</span><strong>~35 000 ₽</strong></div>
+      </div>
+
+      <!-- САМОСБОР -->
+      <div class="hero-card">
+        <div class="hero-img-container">
+          <div class="hero-img-gallery">
+            <div class="gallery-item"><img src="https://sip-basket-cdn-02.geobasket.ru/vol17067/part1706732/1706732430/images/big/2.webp?picsUpdate=0" alt="Аккумулятор"></div>
+            <div class="gallery-item"><img src="https://sip-basket-cdn-02.geobasket.ru/vol17067/part1706732/1706732430/images/big/2.webp?picsUpdate=0" alt="Аккумулятор"></div>
+            <div class="gallery-item"><img src="https://ir.ozone.ru/s3/multimedia-1-f/wc1000/15435698487.jpg" alt="ИБП"></div>
+          </div>
+        </div>
+        <h2 class="hero-title">Самосбор (2×200Ah + ИБП)</h2>
+        <p class="hero-subtitle">Сборная система из 3 компонентов</p>
+        <p class="hero-desc">Это <strong>самостоятельно собранная система</strong>. Вы покупаете два LiFePO4 аккумулятора по 12V 200Ah (суммарная ёмкость ~5,12 кВт·ч) и ИБП «Энергия Smart.2» на 1000 Вт.</p>
+        <div class="details-block">
+          <h4>Плюсы:</h4>
+          <ul class="hero-list">
+            <li><svg class="good-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Огромная ёмкость (~5 кВт·ч)</li>
+            <li><svg class="good-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Ремонтопригодность</li>
+          </ul>
+        </div>
+        <div class="details-block">
+          <h4>Минусы:</h4>
+          <ul class="hero-list">
+            <li><svg class="bad-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Выход всего 1000 Вт</li>
+            <li><svg class="bad-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> <strong>Не попадает под субсидию</strong></li>
+          </ul>
+        </div>
+        <div class="hero-price"><span>Без субсидии:</span><strong>~96 000 ₽</strong></div>
+      </div>
+    </div>
+
+    <!-- ПОДРОБНАЯ ТАБЛИЦА -->
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>EcoFlow Delta 3</th>
+            <th>Самосбор (2×200Ah + ИБП)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ГРУППА 1 -->
+          <tr class="table-group"><td colspan="3">💰 Финансы</td></tr>
+          <tr><td>Стоимость оборудования</td><td>70 000 ₽</td><td>96 000 ₽</td></tr>
+          <tr><td>Субсидия (до 50%)</td><td><span class="chip good">Да (−35 000 ₽)</span></td><td><span class="chip bad">Нет</span></td></tr>
+          <tr class="highlight"><td>Фактическая цена</td><td>35 000 ₽</td><td>96 000 ₽</td></tr>
+          <tr><td>Цена за 1 кВт·ч ёмкости</td><td>~34 000 ₽/кВт·ч</td><td><strong>~18 750 ₽/кВт·ч</strong></td></tr>
+
+          <!-- ГРУППА 2 -->
+          <tr class="table-group"><td colspan="3">⚡ Технические характеристики</td></tr>
+          <tr><td>Тип аккумулятора</td><td>LiFePO4 (встроенный)</td><td>LiFePO4 (2 внешних)</td></tr>
+          <tr><td>Общая ёмкость</td><td>1 024 Вт·ч</td><td><strong>5 120 Вт·ч</strong></td></tr>
+          <tr><td>Номинальная мощность</td><td><strong>1 800 Вт</strong></td><td>1 000 Вт</td></tr>
+          <tr><td>Пиковая мощность</td><td><strong>3 600 Вт</strong></td><td>~2 000 Вт (кратковременно)</td></tr>
+          <tr><td>Форма напряжения</td><td>Чистая синусоида</td><td>Чистая синусоида</td></tr>
+          <tr><td>Время переключения (ИБП)</td><td><strong>&lt; 10 мс</strong></td><td>~ 8 мс</td></tr>
+          <tr><td>Порты 220В</td><td>4 розетки</td><td>4 розетки (на ИБП)</td></tr>
+          <tr><td>Порты USB</td><td>2x USB-C 100W + 2x USB-A</td><td>Нет (только 220В)</td></tr>
+
+          <!-- ГРУППА 3 -->
+          <tr class="table-group"><td colspan="3">🔋 Время автономной работы</td></tr>
+          <tr><td>Котёл (120 Вт)</td><td>~6–7 часов</td><td><strong>~35–40 часов</strong></td></tr>
+          <tr><td>Холодильник (150 Вт)</td><td>~5–6 часов</td><td><strong>~28–32 часа</strong></td></tr>
+          <tr><td>Свет + роутер (100 Вт)</td><td>~8–9 часов</td><td><strong>~45–50 часов</strong></td></tr>
+          <tr><td>Чайник (1500 Вт)</td><td><span class="chip good">Можно (30 мин)</span></td><td><span class="chip bad">Нельзя (защита)</span></td></tr>
+          <tr><td>Микроволновка (1000 Вт)</td><td><span class="chip good">Можно (кратковременно)</span></td><td><span class="chip bad">Нельзя (защита)</span></td></tr>
+
+          <!-- ГРУППА 4 -->
+          <tr class="table-group"><td colspan="3">🛠️ Эксплуатация и монтаж</td></tr>
+          <tr><td>Готовность к работе</td><td>Сразу из коробки</td><td>Требует сборки и настройки</td></tr>
+          <tr><td>Вес системы</td><td><strong>~12 кг</strong></td><td>~42 кг (2 АКБ) + ИБП (~5 кг)</td></tr>
+          <tr><td>Занимаемое место</td><td>Компактно (на столе)</td><td>Требует полки/стеллажа</td></tr>
+          <tr><td>Гарантия</td><td>Заводская (обычно 2-5 лет)</td><td>На каждый компонент отдельно</td></tr>
+          <tr><td>Ремонтопригодность</td><td>Низкая (замена по гарантии)</td><td><strong>Высокая (замена компонента)</strong></td></tr>
+          <tr><td>Возможность расширения</td><td>Ограниченно (офиц. батарея)</td><td><strong>Да (добавление АКБ)</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ВЫВОД -->
+    <div class="verdict">
+      <h2>Кто выигрывает?</h2>
+      <p>Если смотреть на цифры в лоб, то кажется, что <strong>Самосбор</strong> выигрывает за счёт огромной ёмкости (5 кВт·ч против 1 кВт·ч). Однако, если учитывать вашу ситуацию (нет батарей, нужна готовая система и субсидия), картина меняется:</p>
+      <ul class="verdict-list">
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span><strong>По цене выигрывает EcoFlow.</strong> С учетом субсидии (35 000 ₽) он почти в 3 раза дешевле самосбора (96 000 ₽).</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span><strong>По мощности выигрывает EcoFlow.</strong> 1800 Вт позволяют вскипятить чайник или разогреть еду в микроволновке. ИБП на 1000 Вт в самосборе при попытке включить чайник просто уйдет в защиту.</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span><strong>По автономности выигрывает Самосбор.</strong> Благодаря емкости 5 кВт·ч котел будет работать 35-40 часов, а не 6-7 часов.</span>
+        </li>
+      </ul>
+      <p style="margin-top: 24px; font-weight: 600; font-size: 18px;">Рекомендация:</p>
+      <p>Для типичных отключений света на 3–6 часов <strong>EcoFlow Delta 3 с субсидией — абсолютный победитель</strong>. Если же у вас отключения длятся сутками, и вы готовы переплатить в 3 раза, отказаться от чайника и субсидии, тогда альтернативы самосбору нет.</p>
+    </div>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+      <span><strong>Примечание:</strong> расчет времени работы оценочный, исходя из полезной ёмкости (~85-90%) и КПД инвертора ~90%. Субсидия Севастополя для физлиц — до 50% стоимости портативной электростанции, максимум 150 000 ₽. Самосбор из отдельных запчастей в перечень компенсации не входит.</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const intro = document.getElementById('intro-screen');
+    const main = document.getElementById('main-content');
+    setTimeout(() => {
+      intro.classList.add('hidden');
+      main.classList.add('show');
+      setTimeout(() => intro.remove(), 1000);
+    }, 3000);
+  });
+</script>
+</body>
+</html>
